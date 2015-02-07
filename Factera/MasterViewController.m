@@ -14,6 +14,8 @@
 #import "Fact.h"
 #import "Title.h"
 
+#import "FactCell.h"
+
 @interface MasterViewController ()
 
 @end
@@ -34,7 +36,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    self.tableView.rowHeight = 80;
+    self.tableView.separatorColor = [UIColor clearColor];
+    [self.tableView registerClass:[FactCell class] forCellReuseIdentifier:@"Cell"];
 
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshTriggered:) forControlEvents:UIControlEventValueChanged];
@@ -101,16 +105,16 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    FactCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell:(FactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Fact *fact = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    cell.textLabel.text = fact.title;
-    cell.detailTextLabel.text = fact.details;
+    cell.titleLabel.text = fact.title;
+    cell.detailLabel.text = fact.details;
 }
 
 #pragma mark - Fetched results controller
@@ -190,7 +194,7 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:(FactCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
