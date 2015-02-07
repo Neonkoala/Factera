@@ -50,7 +50,7 @@
     [self.tableView registerClass:[FactCell class] forCellReuseIdentifier:@"Cell"];
 
     // Pull to refresh
-    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl = [[[UIRefreshControl alloc] init] autorelease];
     [self.refreshControl addTarget:self action:@selector(refreshTriggered:) forControlEvents:UIControlEventValueChanged];
     [self.refreshControl beginRefreshing];
     
@@ -58,6 +58,7 @@
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
+    // Listen for network operations
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(factsDidUpdate:) name:NetworkFactsUpdateComplete object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(factsDidFailToUpdate:) name:NetworkFactsUpdateFailed object:nil];
 }
@@ -67,11 +68,24 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NetworkFactsUpdateComplete object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NetworkFactsUpdateFailed object:nil];
+    
+    [_imageCache release];
+    [_imageQueue release];
+    [_detailViewController release];
+    [_fetchedResultsController release];
+    [_managedObjectContext release];
+    
+    [super dealloc];
+}
+
 #pragma mark - Interface
 
 - (void)updateTitle {
     // Fetch the title from Core Data
-    NSError *error;
+    NSError *error = nil;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Title"];
     NSArray *titles = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if(error) {
@@ -138,6 +152,7 @@
     
     cell.titleLabel.text = fact.title;
     cell.detailLabel.text = fact.details;
+    cell.thumbnailImageView.image = nil;
     
     // Check if we have a cached image in memory or load it asynchronously
     if(fact.imageUrl) {
@@ -145,7 +160,6 @@
         if(image) {
             cell.thumbnailImageView.image = image;
         } else {
-            __weak MasterViewController *weakSelf = self;
             NSURL *imageURL = [NSURL URLWithString:fact.imageUrl];
             NSURLRequest *imageRequest = [NSURLRequest requestWithURL:imageURL];
             [NSURLConnection sendAsynchronousRequest:imageRequest queue:self.imageQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -156,15 +170,13 @@
                     // Add the image data to the cache
                     UIImage *image = [UIImage imageWithData:data];
                     if(image) {
-                        [weakSelf.imageCache setObject:image forKey:fact.imageUrl];
+                        [self.imageCache setObject:image forKey:fact.imageUrl];
                     
-                        [weakSelf loadImage:image forCellAtIndexPath:indexPath];
+                        [self loadImage:image forCellAtIndexPath:indexPath];
                     }
                 }
             }];
         }
-    } else {
-        cell.thumbnailImageView.image = nil;
     }
 }
 
@@ -176,7 +188,7 @@
         return _fetchedResultsController;
     }
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Fact" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -185,7 +197,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO] autorelease];
     NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];

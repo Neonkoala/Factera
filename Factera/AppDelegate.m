@@ -28,15 +28,15 @@
     [[NetworkManager sharedManager] setMoc:self.managedObjectContext];
     
     // Setup the view controllers
-    MasterViewController *masterVC = [[MasterViewController alloc] initWithStyle:UITableViewStylePlain];
+    MasterViewController *masterVC = [[[MasterViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
     masterVC.managedObjectContext = self.managedObjectContext;
-    DetailViewController *detailVC = [DetailViewController new];
+    DetailViewController *detailVC = [[DetailViewController new] autorelease];
     
-    UINavigationController *masterNavController = [[UINavigationController alloc] initWithRootViewController:masterVC];
-    UINavigationController *detailNavController = [[UINavigationController alloc] initWithRootViewController:detailVC];
+    UINavigationController *masterNavController = [[[UINavigationController alloc] initWithRootViewController:masterVC] autorelease];
+    UINavigationController *detailNavController = [[[UINavigationController alloc] initWithRootViewController:detailVC] autorelease];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.splitViewController = [UISplitViewController new];
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.splitViewController = [[UISplitViewController new] autorelease];
     self.splitViewController.viewControllers = @[masterNavController, detailNavController];
     self.splitViewController.delegate = self;
     

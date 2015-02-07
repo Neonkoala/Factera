@@ -48,15 +48,15 @@
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     // Gradient background
-    _gradientLayer = [CAGradientLayer layer];
+    _gradientLayer = [[CAGradientLayer layer] retain];
     _gradientLayer.colors = @[(id)[UIColor whiteColor].CGColor, (id)[UIColor colorWithWhite:0.92 alpha:1.0].CGColor];
     _gradientLayer.frame = self.contentView.bounds;
     
-    self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+    self.backgroundView = [[[UIView alloc] initWithFrame:self.bounds] autorelease];
     [self.backgroundView.layer addSublayer:_gradientLayer];
     
     // Labels
-    _titleLabel = [[UILabel alloc] init];
+    _titleLabel = [[[UILabel alloc] init] retain];
     _titleLabel.translatesAutoresizingMaskIntoConstraints = FALSE;
     _titleLabel.font = [UIFont fontWithName:@"TimesNewRomanPSMT" size:18.0];
     _titleLabel.textColor = [UIColor colorWithRed:0.1 green:0.2 blue:0.45 alpha:1.0];
@@ -64,7 +64,7 @@
     
     [self.contentView addSubview:_titleLabel];
     
-    _detailLabel = [[UILabel alloc] init];
+    _detailLabel = [[[UILabel alloc] init] retain];
     _detailLabel.translatesAutoresizingMaskIntoConstraints = FALSE;
     _detailLabel.textColor = [UIColor blackColor];
     _detailLabel.font = [UIFont systemFontOfSize:10.0];
@@ -72,7 +72,7 @@
     
     [self.contentView addSubview:_detailLabel];
     
-    _thumbnailImageView = [[UIImageView alloc] init];
+    _thumbnailImageView = [[[UIImageView alloc] init] retain];
     _thumbnailImageView.translatesAutoresizingMaskIntoConstraints = FALSE;
     _thumbnailImageView.contentMode = UIViewContentModeScaleAspectFill;
     _thumbnailImageView.clipsToBounds = TRUE;

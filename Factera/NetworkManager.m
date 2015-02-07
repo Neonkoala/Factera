@@ -72,10 +72,10 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
 }
 
 - (void)parseFacts:(NSData *)rawData {
-    NSError *error;
+    NSError *error = nil;
     
     // Force encoding to UTF8 for Apple parser as ASCII is not a valid format for JSON
-    NSString *asciiString = [[NSString alloc] initWithData:rawData encoding:NSASCIIStringEncoding];
+    NSString *asciiString = [[[NSString alloc] initWithData:rawData encoding:NSASCIIStringEncoding] autorelease];
     NSData *utf8String = [asciiString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:utf8String options:0 error:&error];
     if(error) {
@@ -161,12 +161,12 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         }
         
         // Save to Core Data and notify
-        NSError *saveError;
+        NSError *saveError = nil;
         [self.moc save:&saveError];
         
         if(saveError) {
-            NSLog(@"Error saving updated facts: %@", error.localizedDescription);
-            [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateFailed object:self userInfo:@{NetworkErrorKey: error}];
+            NSLog(@"Error saving updated facts: %@", saveError.localizedDescription);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateFailed object:self userInfo:@{NetworkErrorKey: saveError}];
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateComplete object:self];
         }
