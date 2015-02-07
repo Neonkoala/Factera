@@ -10,7 +10,11 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 
+#import "NetworkManager.h"
+
 @interface AppDelegate () <UISplitViewControllerDelegate>
+
+@property (nonatomic, strong) UISplitViewController *splitViewController;
 
 @end
 
@@ -19,14 +23,28 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    splitViewController.delegate = self;
-
-    UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-    MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
-    controller.managedObjectContext = self.managedObjectContext;
+    
+    // Initialize the network manager
+    [[NetworkManager sharedManager] setMoc:self.managedObjectContext];
+    
+    // Setup the view controllers
+    MasterViewController *masterVC = [[MasterViewController alloc] initWithStyle:UITableViewStylePlain];
+    masterVC.managedObjectContext = self.managedObjectContext;
+    DetailViewController *detailVC = [DetailViewController new];
+    
+    UINavigationController *masterNavController = [[UINavigationController alloc] initWithRootViewController:masterVC];
+    UINavigationController *detailNavController = [[UINavigationController alloc] initWithRootViewController:detailVC];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.splitViewController = [UISplitViewController new];
+    self.splitViewController.viewControllers = @[masterNavController, detailNavController];
+    self.splitViewController.delegate = self;
+    
+    masterNavController.topViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    
+    self.window.rootViewController = self.splitViewController;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

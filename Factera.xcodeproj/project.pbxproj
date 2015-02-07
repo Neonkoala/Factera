@@ -12,7 +12,6 @@
 		0115BFD01A85C56500DDF201 /* Factera.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */; };
 		0115BFD31A85C56500DDF201 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFD21A85C56500DDF201 /* MasterViewController.m */; };
 		0115BFD61A85C56500DDF201 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFD51A85C56500DDF201 /* DetailViewController.m */; };
-		0115BFD91A85C56500DDF201 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0115BFD71A85C56500DDF201 /* Main.storyboard */; };
 		0115BFDB1A85C56500DDF201 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0115BFDA1A85C56500DDF201 /* Images.xcassets */; };
 		0115BFDE1A85C56500DDF201 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */; };
 		0115BFEA1A85C56500DDF201 /* FacteraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFE91A85C56500DDF201 /* FacteraTests.m */; };
@@ -42,7 +41,6 @@
 		0115BFD21A85C56500DDF201 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		0115BFD41A85C56500DDF201 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		0115BFD51A85C56500DDF201 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		0115BFD81A85C56500DDF201 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0115BFDA1A85C56500DDF201 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0115BFDD1A85C56500DDF201 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		0115BFE31A85C56500DDF201 /* FacteraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FacteraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +99,6 @@
 				0115BFD21A85C56500DDF201 /* MasterViewController.m */,
 				0115BFD41A85C56500DDF201 /* DetailViewController.h */,
 				0115BFD51A85C56500DDF201 /* DetailViewController.m */,
-				0115BFD71A85C56500DDF201 /* Main.storyboard */,
 				0115BFDA1A85C56500DDF201 /* Images.xcassets */,
 				0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */,
 				0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */,
@@ -223,7 +220,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0115BFD91A85C56500DDF201 /* Main.storyboard in Resources */,
 				0115BFDE1A85C56500DDF201 /* LaunchScreen.xib in Resources */,
 				0115BFDB1A85C56500DDF201 /* Images.xcassets in Resources */,
 			);
@@ -273,14 +269,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		0115BFD71A85C56500DDF201 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0115BFD81A85C56500DDF201 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
