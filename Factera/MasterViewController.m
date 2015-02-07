@@ -9,6 +9,8 @@
 #import "MasterViewController.h"
 #import "DetailViewController.h"
 
+#import "NetworkManager.h"
+
 #import "Fact.h"
 #import "Title.h"
 
@@ -31,10 +33,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
 
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshTriggered:) forControlEvents:UIControlEventValueChanged];
     
+    [self updateTitle];
+    
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(factsDidUpdate:) name:NetworkFactsUpdateComplete object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(factsDidFailToUpdate:) name:NetworkFactsUpdateFailed object:nil];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Interface
+
+- (void)updateTitle {
     // Fetch the title
     NSError *error;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Title"];
@@ -48,19 +68,12 @@
     } else {
         self.navigationItem.title = @"Factera";
     }
-    
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - User Interaction
 
 - (void)refreshTriggered:(id)sender {
-    
+    [[NetworkManager sharedManager] updateFacts];
 }
 
 #pragma mark - Segues
@@ -192,14 +205,22 @@
     [self.tableView endUpdates];
 }
 
-/*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
+#pragma mark - Notifications
+
+- (void)factsDidUpdate:(NSNotification *)notification {
+    [self.refreshControl endRefreshing];
+    
+    [self updateTitle];
 }
- */
+
+- (void)factsDidFailToUpdate:(NSNotification *)notification {
+    [self.refreshControl endRefreshing];
+    
+    NSError *error = notification.userInfo[NetworkErrorKey];
+    if(error) {
+        [[[UIAlertView alloc] initWithTitle:@"Error updating facts" message:error.localizedDescription delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil] show];
+        
+    }
+}
 
 @end

@@ -18,6 +18,7 @@
 		0115BFF51A85C69900DDF201 /* Fact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFF41A85C69900DDF201 /* Fact.m */; };
 		0115BFF81A85C71600DDF201 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFF71A85C71600DDF201 /* NetworkManager.m */; };
 		0115BFFB1A85D45C00DDF201 /* Title.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFFA1A85D45C00DDF201 /* Title.m */; };
+		0115BFFE1A85E2B200DDF201 /* FactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFFD1A85E2B200DDF201 /* FactCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		0115BFF71A85C71600DDF201 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		0115BFF91A85D45C00DDF201 /* Title.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Title.h; sourceTree = "<group>"; };
 		0115BFFA1A85D45C00DDF201 /* Title.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Title.m; sourceTree = "<group>"; };
+		0115BFFC1A85E2B200DDF201 /* FactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FactCell.h; sourceTree = "<group>"; };
+		0115BFFD1A85E2B200DDF201 /* FactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FactCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +102,8 @@
 				0115BFD21A85C56500DDF201 /* MasterViewController.m */,
 				0115BFD41A85C56500DDF201 /* DetailViewController.h */,
 				0115BFD51A85C56500DDF201 /* DetailViewController.m */,
+				0115BFFC1A85E2B200DDF201 /* FactCell.h */,
+				0115BFFD1A85E2B200DDF201 /* FactCell.m */,
 				0115BFDA1A85C56500DDF201 /* Images.xcassets */,
 				0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */,
 				0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */,
@@ -242,6 +247,7 @@
 				0115BFD61A85C56500DDF201 /* DetailViewController.m in Sources */,
 				0115BFF81A85C71600DDF201 /* NetworkManager.m in Sources */,
 				0115BFF51A85C69900DDF201 /* Fact.m in Sources */,
+				0115BFFE1A85E2B200DDF201 /* FactCell.m in Sources */,
 				0115BFD31A85C56500DDF201 /* MasterViewController.m in Sources */,
 				0115BFFB1A85D45C00DDF201 /* Title.m in Sources */,
 				0115BFCD1A85C56500DDF201 /* AppDelegate.m in Sources */,

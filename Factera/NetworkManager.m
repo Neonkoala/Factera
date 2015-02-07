@@ -64,7 +64,11 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
 
 - (void)parseFacts:(NSData *)rawData {
     NSError *error;
-    NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:rawData options:0 error:&error];
+    
+    // Force encoding to UTF8 for Apple parser as ASCII is not a valid format for JSON
+    NSString *asciiString = [[NSString alloc] initWithData:rawData encoding:NSASCIIStringEncoding];
+    NSData *utf8String = [asciiString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:utf8String options:0 error:&error];
     if(error) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateFailed object:self userInfo:@{NetworkErrorKey: error}];
     } else {
@@ -85,11 +89,11 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         
         // Update facts
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
-        NSArray *rows = [jsonResponse[rows] sortedArrayUsingDescriptors:@[sortDescriptor]];
+        NSArray *rows = [jsonResponse[FactsRowKey] sortedArrayUsingDescriptors:@[sortDescriptor]];
         NSMutableArray *keys = [NSMutableArray arrayWithCapacity:rows.count];
         for(NSDictionary *row in rows) {
             // Check for a title as we use this as the identifier
-            if(!row[FactsTitleKey]) {
+            if(!row[FactsTitleKey] || row[FactsTitleKey] == [NSNull null]) {
                 continue;
             }
             [keys addObject:row[FactsTitleKey]];
@@ -108,11 +112,11 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         // Update or create facts
         NSUInteger existingCount = 0;
         for (NSDictionary *row in rows) {
-            NSString *rowTitle = row[FactsTitleKey];
-            if(!rowTitle) {
+            if(!row[FactsTitleKey] || row[FactsTitleKey] == [NSNull null]) {
                 continue;
             }
             
+            NSString *rowTitle = row[FactsTitleKey];
             Fact *fact = nil;
             if(existingCount < existingRows.count) {
                 fact = [existingRows objectAtIndex:existingCount];
@@ -125,13 +129,14 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
                 existingCount++;
             }
             
-            fact.details = row[FactsDetailKey];
-            fact.imageUrl = row[FactsImageKey];
+            // Eliminate null values which made it through due to string conversion
+            fact.details = (row[FactsDetailKey] == [NSNull null]) ? nil : row[FactsDetailKey];
+            fact.imageUrl = (row[FactsImageKey]  == [NSNull null]) ? nil : row[FactsImageKey];
         }
         
         // Find and delete old facts
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fact"];
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"title IN %@", keys];
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"NOT title IN %@", keys];
         fetchRequest.sortDescriptors = @[sortDescriptor];
         NSArray *obsoleteFacts = [self.moc executeFetchRequest:fetchRequest error:&error];
         if (error) {
@@ -144,12 +149,10 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         }
         
         // Save to Core Data and notify
-        __block NSError *saveError;
-        [self.moc performBlockAndWait:^{
-            [self.moc save:&saveError];
-        }];
+        NSError *saveError;
+        [self.moc save:&saveError];
         
-        if(error) {
+        if(saveError) {
             NSLog(@"Error saving updated facts: %@", error.localizedDescription);
             [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateFailed object:self userInfo:@{NetworkErrorKey: error}];
         } else {
