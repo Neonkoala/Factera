@@ -15,9 +15,9 @@
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 
+@property (nonatomic, strong) NSCache *imageCache;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-
 
 @end
 

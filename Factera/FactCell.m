@@ -74,7 +74,8 @@
     
     _thumbnailImageView = [[UIImageView alloc] init];
     _thumbnailImageView.translatesAutoresizingMaskIntoConstraints = FALSE;
-    _thumbnailImageView.backgroundColor = [UIColor redColor];
+    _thumbnailImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _thumbnailImageView.clipsToBounds = TRUE;
     
     [self.contentView addSubview:_thumbnailImageView];
     
@@ -84,6 +85,7 @@
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[titleLabel]-5-|" options:0 metrics:nil views:views]];
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[detailLabel]-10-[imageView(80)]-5-|" options:0 metrics:nil views:views]];
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-5-[titleLabel(20)]-3-[detailLabel(40)]" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[titleLabel]-0-[imageView(50)]" options:0 metrics:nil views:views]];
 }
 
 - (void)layoutSubviews {

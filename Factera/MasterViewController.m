@@ -18,12 +18,18 @@
 
 @interface MasterViewController ()
 
+@property (nonatomic, strong) NSOperationQueue *imageQueue;
+
 @end
 
 @implementation MasterViewController
 
 - (instancetype)initWithStyle:(UITableViewStyle)style {
     if(self = [super initWithStyle:style]) {
+        _imageCache = [[NSCache alloc] init];
+        _imageCache.countLimit = 100;
+        _imageQueue = [NSOperationQueue mainQueue];
+        
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             self.clearsSelectionOnViewWillAppear = NO;
             self.preferredContentSize = CGSizeMake(320.0, 600.0);
@@ -34,14 +40,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
+    // Start loading the feed
+    [[NetworkManager sharedManager] updateFacts];
+    
+    // Setup the table view
     self.tableView.rowHeight = 80;
     self.tableView.separatorColor = [UIColor clearColor];
     [self.tableView registerClass:[FactCell class] forCellReuseIdentifier:@"Cell"];
 
+    // Pull to refresh
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshTriggered:) forControlEvents:UIControlEventValueChanged];
+    [self.refreshControl beginRefreshing];
     
     [self updateTitle];
     
@@ -59,7 +70,7 @@
 #pragma mark - Interface
 
 - (void)updateTitle {
-    // Fetch the title
+    // Fetch the title from Core Data
     NSError *error;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Title"];
     NSArray *titles = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -95,6 +106,18 @@
 
 #pragma mark - Table View
 
+- (void)loadImage:(UIImage *)image forCellAtIndexPath:(NSIndexPath *)indexPath {
+    __block FactCell *cell = (FactCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    if(cell) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            FactCell *cell = (FactCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            if(cell) {
+                cell.thumbnailImageView.image = image;
+            }
+        });
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [[self.fetchedResultsController sections] count];
 }
@@ -115,6 +138,34 @@
     
     cell.titleLabel.text = fact.title;
     cell.detailLabel.text = fact.details;
+    
+    // Check if we have a cached image in memory or load it asynchronously
+    if(fact.imageUrl) {
+        UIImage *image = [self.imageCache objectForKey:fact.imageUrl];
+        if(image) {
+            cell.thumbnailImageView.image = image;
+        } else {
+            __weak MasterViewController *weakSelf = self;
+            NSURL *imageURL = [NSURL URLWithString:fact.imageUrl];
+            NSURLRequest *imageRequest = [NSURLRequest requestWithURL:imageURL];
+            [NSURLConnection sendAsynchronousRequest:imageRequest queue:self.imageQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                if(connectionError) {
+                    // Fail silently
+                    NSLog(@"Error fetching image at %@ : %@", imageURL.absoluteString, connectionError.localizedDescription);
+                } else {
+                    // Add the image data to the cache
+                    UIImage *image = [UIImage imageWithData:data];
+                    if(image) {
+                        [weakSelf.imageCache setObject:image forKey:fact.imageUrl];
+                    
+                        [weakSelf loadImage:image forCellAtIndexPath:indexPath];
+                    }
+                }
+            }];
+        }
+    } else {
+        cell.thumbnailImageView.image = nil;
+    }
 }
 
 #pragma mark - Fetched results controller
@@ -212,19 +263,24 @@
 #pragma mark - Notifications
 
 - (void)factsDidUpdate:(NSNotification *)notification {
-    [self.refreshControl endRefreshing];
-    
-    [self updateTitle];
+    // Make sure we update UI on the main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.refreshControl endRefreshing];
+        
+        [self updateTitle];
+    });
 }
 
 - (void)factsDidFailToUpdate:(NSNotification *)notification {
-    [self.refreshControl endRefreshing];
-    
-    NSError *error = notification.userInfo[NetworkErrorKey];
-    if(error) {
-        [[[UIAlertView alloc] initWithTitle:@"Error updating facts" message:error.localizedDescription delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil] show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.refreshControl endRefreshing];
         
-    }
+        NSError *error = notification.userInfo[NetworkErrorKey];
+        if(error) {
+            [[[UIAlertView alloc] initWithTitle:@"Error updating facts" message:error.localizedDescription delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil] show];
+            
+        }
+    });
 }
 
 @end

@@ -23,6 +23,7 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
 
 @interface NetworkManager()
 
+@property (nonatomic, assign) BOOL updating;
 @property (nonatomic, strong) NSOperationQueue *queue;
 
 @end
@@ -40,12 +41,18 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
 
 - (instancetype)init {
     if(self = [super init]) {
+        _updating = FALSE;
         _queue = [NSOperationQueue mainQueue];
     }
     return self;
 }
 
 - (void)updateFacts {
+    if(self.updating) {
+        return;
+    }
+    self.updating = TRUE;
+    
     NSURL *factsURL = [NSURL URLWithString:FactsURLString];
     
     NSURLRequest *request = [NSURLRequest requestWithURL:factsURL];
@@ -54,6 +61,8 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
             NSLog(@"Error loading facts: %@", connectionError.localizedDescription);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateFailed object:self userInfo:@{NetworkErrorKey: connectionError}];
+            
+            self.updating = FALSE;
         } else {
             if(data.length) {
                 [self parseFacts:data];
@@ -77,6 +86,7 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         NSArray *titles = [self.moc executeFetchRequest:fetchRequest error:&error];
         if(error) {
             NSLog(@"Error fetching title: %@", error.localizedDescription);
+            self.updating = FALSE;
             return;
         }
         Title *title = nil;
@@ -106,6 +116,7 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         NSArray *existingRows = [self.moc executeFetchRequest:fetchRequest error:&error];
         if (error) {
             NSLog(@"Error fetching existing facts: %@", error.localizedDescription);
+            self.updating = FALSE;
             return;
         }
         
@@ -141,6 +152,7 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
         NSArray *obsoleteFacts = [self.moc executeFetchRequest:fetchRequest error:&error];
         if (error) {
             NSLog(@"Error fetching old facts: %@", error.localizedDescription);
+            self.updating = FALSE;
             return;
         }
         
@@ -159,6 +171,7 @@ NSString *const NetworkFactsUpdateFailed = @"NetworkFactsUpdateFailed";
             [[NSNotificationCenter defaultCenter] postNotificationName:NetworkFactsUpdateComplete object:self];
         }
     }
+    self.updating = FALSE;
 }
 
 @end
