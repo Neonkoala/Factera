@@ -16,6 +16,7 @@
 		0115BFDB1A85C56500DDF201 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0115BFDA1A85C56500DDF201 /* Images.xcassets */; };
 		0115BFDE1A85C56500DDF201 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */; };
 		0115BFEA1A85C56500DDF201 /* FacteraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFE91A85C56500DDF201 /* FacteraTests.m */; };
+		0115BFF51A85C69900DDF201 /* Fact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115BFF41A85C69900DDF201 /* Fact.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,8 @@
 		0115BFE31A85C56500DDF201 /* FacteraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FacteraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0115BFE81A85C56500DDF201 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0115BFE91A85C56500DDF201 /* FacteraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacteraTests.m; sourceTree = "<group>"; };
+		0115BFF31A85C69900DDF201 /* Fact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fact.h; sourceTree = "<group>"; };
+		0115BFF41A85C69900DDF201 /* Fact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fact.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +99,8 @@
 				0115BFDA1A85C56500DDF201 /* Images.xcassets */,
 				0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */,
 				0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */,
+				0115BFF31A85C69900DDF201 /* Fact.h */,
+				0115BFF41A85C69900DDF201 /* Fact.m */,
 				0115BFC71A85C56500DDF201 /* Supporting Files */,
 			);
 			path = Factera;
@@ -176,6 +181,7 @@
 				TargetAttributes = {
 					0115BFC31A85C56500DDF201 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = X2VANJ53QA;
 					};
 					0115BFE21A85C56500DDF201 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -228,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0115BFD61A85C56500DDF201 /* DetailViewController.m in Sources */,
+				0115BFF51A85C69900DDF201 /* Fact.m in Sources */,
 				0115BFD31A85C56500DDF201 /* MasterViewController.m in Sources */,
 				0115BFCD1A85C56500DDF201 /* AppDelegate.m in Sources */,
 				0115BFD01A85C56500DDF201 /* Factera.xcdatamodeld in Sources */,
@@ -355,7 +362,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Factera/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -365,7 +374,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Factera/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
