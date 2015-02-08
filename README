@@ -1,0 +1,11 @@
+Factera
+
+Simple Universal application to parse a JSON feed and display the details in master-detail format.
+
+- iOS 6.0 and later
+- iPhone and iPad
+- Uses Core Data for caching facts
+- Async image loading on the table view
+- ARC disabled
+
+Nick Dawson
