@@ -184,7 +184,7 @@
     Fact *fact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     [controller setFact:fact];
     
-    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    if(!self.detailViewController) {
         [self.navigationController pushViewController:controller animated:YES];
     }
 }

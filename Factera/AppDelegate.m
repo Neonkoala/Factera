@@ -23,6 +23,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     // Initialize the network manager
     [[NetworkManager sharedManager] setMoc:self.managedObjectContext];
@@ -35,14 +36,16 @@
     UINavigationController *masterNavController = [[[UINavigationController alloc] initWithRootViewController:masterVC] autorelease];
     UINavigationController *detailNavController = [[[UINavigationController alloc] initWithRootViewController:detailVC] autorelease];
     
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    self.splitViewController = [[UISplitViewController new] autorelease];
-    self.splitViewController.viewControllers = @[masterNavController, detailNavController];
-    self.splitViewController.delegate = self;
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        self.splitViewController = [[UISplitViewController new] autorelease];
+        self.splitViewController.viewControllers = @[masterNavController, detailNavController];
+        self.splitViewController.delegate = self;
+        
+        self.window.rootViewController = self.splitViewController;
+    } else {
+        self.window.rootViewController = masterNavController;
+    }
     
-    detailNavController.topViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-    
-    self.window.rootViewController = self.splitViewController;
     [self.window makeKeyAndVisible];
     
     return YES;
