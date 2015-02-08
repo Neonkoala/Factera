@@ -8,6 +8,8 @@
 
 #import "DetailViewController.h"
 
+#import "AppDelegate.h"
+
 #import "Fact.h"
 
 @interface DetailViewController ()
@@ -65,11 +67,20 @@
     [self.view addSubview:self.detailDescriptionLabel];
     [self.view addSubview:self.imageView];
     
-    NSDictionary *views = @{@"detailDescriptionLabel": self.detailDescriptionLabel,
-                            @"imageView": self.imageView,
-                            @"topLayoutGuide": self.topLayoutGuide};
     
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topLayoutGuide]-10-[imageView(180)]-10-[detailDescriptionLabel]" options:0 metrics:nil views:views]];
+    NSDictionary *views = nil;
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        views = @{@"detailDescriptionLabel": self.detailDescriptionLabel,
+                  @"imageView": self.imageView,
+                  @"topLayoutGuide": self.topLayoutGuide};
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topLayoutGuide]-10-[imageView(180)]-10-[detailDescriptionLabel]" options:0 metrics:nil views:views]];
+    } else {
+        views = @{@"detailDescriptionLabel": self.detailDescriptionLabel,
+                  @"imageView": self.imageView};
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-10-[imageView(180)]-10-[detailDescriptionLabel]" options:0 metrics:nil views:views]];
+    }
+    
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[imageView]-10-|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[detailDescriptionLabel]-10-|" options:0 metrics:nil views:views]];
     

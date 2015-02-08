@@ -9,6 +9,7 @@
 #import "MasterViewController.h"
 #import "DetailViewController.h"
 
+#import "AppDelegate.h"
 #import "NetworkManager.h"
 
 #import "Fact.h"
@@ -168,6 +169,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Load the detail view controller or just configure the existing one (if we're on iPad)
     DetailViewController *controller = nil;
     if(self.detailViewController) {
         controller = self.detailViewController;

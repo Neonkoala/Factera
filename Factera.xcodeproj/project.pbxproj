@@ -98,22 +98,12 @@
 			children = (
 				0115BFCB1A85C56500DDF201 /* AppDelegate.h */,
 				0115BFCC1A85C56500DDF201 /* AppDelegate.m */,
-				0115BFD11A85C56500DDF201 /* MasterViewController.h */,
-				0115BFD21A85C56500DDF201 /* MasterViewController.m */,
-				0115BFD41A85C56500DDF201 /* DetailViewController.h */,
-				0115BFD51A85C56500DDF201 /* DetailViewController.m */,
-				0115BFFC1A85E2B200DDF201 /* FactCell.h */,
-				0115BFFD1A85E2B200DDF201 /* FactCell.m */,
-				0115BFDA1A85C56500DDF201 /* Images.xcassets */,
-				0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */,
-				0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */,
-				0115BFF91A85D45C00DDF201 /* Title.h */,
-				0115BFFA1A85D45C00DDF201 /* Title.m */,
-				0115BFF31A85C69900DDF201 /* Fact.h */,
-				0115BFF41A85C69900DDF201 /* Fact.m */,
+				0115C0191A86E03400DDF201 /* Data Model */,
+				0115C01B1A86E05A00DDF201 /* Network */,
+				0115C01C1A86E06200DDF201 /* Resources */,
 				0115BFC71A85C56500DDF201 /* Supporting Files */,
-				0115BFF61A85C71600DDF201 /* NetworkManager.h */,
-				0115BFF71A85C71600DDF201 /* NetworkManager.m */,
+				0115C0181A86E01400DDF201 /* ViewControllers */,
+				0115C01A1A86E04A00DDF201 /* Views */,
 			);
 			path = Factera;
 			sourceTree = "<group>";
@@ -142,6 +132,56 @@
 				0115BFE81A85C56500DDF201 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0115C0181A86E01400DDF201 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0115BFD41A85C56500DDF201 /* DetailViewController.h */,
+				0115BFD51A85C56500DDF201 /* DetailViewController.m */,
+				0115BFD11A85C56500DDF201 /* MasterViewController.h */,
+				0115BFD21A85C56500DDF201 /* MasterViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		0115C0191A86E03400DDF201 /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				0115BFF31A85C69900DDF201 /* Fact.h */,
+				0115BFF41A85C69900DDF201 /* Fact.m */,
+				0115BFCE1A85C56500DDF201 /* Factera.xcdatamodeld */,
+				0115BFF91A85D45C00DDF201 /* Title.h */,
+				0115BFFA1A85D45C00DDF201 /* Title.m */,
+			);
+			name = "Data Model";
+			sourceTree = "<group>";
+		};
+		0115C01A1A86E04A00DDF201 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0115BFFC1A85E2B200DDF201 /* FactCell.h */,
+				0115BFFD1A85E2B200DDF201 /* FactCell.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		0115C01B1A86E05A00DDF201 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				0115BFF61A85C71600DDF201 /* NetworkManager.h */,
+				0115BFF71A85C71600DDF201 /* NetworkManager.m */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		0115C01C1A86E06200DDF201 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0115BFDA1A85C56500DDF201 /* Images.xcassets */,
+				0115BFDC1A85C56500DDF201 /* LaunchScreen.xib */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
