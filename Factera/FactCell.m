@@ -94,4 +94,13 @@
     [self.gradientLayer setFrame:self.backgroundView.bounds];
 }
 
+- (void)dealloc {
+    [_detailLabel release];
+    [_titleLabel release];
+    [_thumbnailImageView release];
+    [_gradientLayer release];
+    
+    [super dealloc];
+}
+
 @end

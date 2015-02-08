@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class Fact;
+
 @interface DetailViewController : UIViewController
 
-@property (strong, nonatomic) id detailItem;
-@property (assign, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (nonatomic, assign) Fact *fact;
+@property (nonatomic, assign) NSCache *imageCache;
 
 @end
 

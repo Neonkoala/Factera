@@ -26,9 +26,9 @@
 
 - (instancetype)initWithStyle:(UITableViewStyle)style {
     if(self = [super initWithStyle:style]) {
-        _imageCache = [[NSCache alloc] init];
+        _imageCache = [[NSCache new] retain];
         _imageCache.countLimit = 100;
-        _imageQueue = [NSOperationQueue mainQueue];
+        _imageQueue = [[NSOperationQueue mainQueue] retain];
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             self.clearsSelectionOnViewWillAppear = NO;
@@ -105,19 +105,6 @@
     [[NetworkManager sharedManager] updateFacts];
 }
 
-#pragma mark - Segues
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        [controller setDetailItem:object];
-        controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-        controller.navigationItem.leftItemsSupplementBackButton = YES;
-    }
-}
-
 #pragma mark - Table View
 
 - (void)loadImage:(UIImage *)image forCellAtIndexPath:(NSIndexPath *)indexPath {
@@ -177,6 +164,26 @@
                 }
             }];
         }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    DetailViewController *controller = nil;
+    if(self.detailViewController) {
+        controller = self.detailViewController;
+    } else {
+        controller = [[DetailViewController new] autorelease];
+    }
+    
+    controller.imageCache = self.imageCache;
+    controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    controller.navigationItem.leftItemsSupplementBackButton = YES;
+    
+    Fact *fact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    [controller setFact:fact];
+    
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
